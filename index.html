@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Build vs Buy Decision Guide</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #000000;
+      --primary-dark: #222222;
+      --secondary: #555555;
+      --light: #ffffff;
+      --dark: #333333;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #e0e0e0;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+    }
+    
+    /* Animation classes */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .fade-in.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--dark);
+      background-color: var(--light);
+      letter-spacing: 0.3px;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 80px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: var(--light);
+      transform: skewY(-2deg);
+    }
+    
+    header h1 {
+      font-size: 3.2rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    
+    header p {
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      opacity: 0.9;
+    }
+    
+    section {
+      padding: 80px 0;
+      position: relative;
+    }
+    
+    section:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    .section-title h2 {
+      font-size: 2.4rem;
+      color: var(--primary);
+      position: relative;
+      display: inline-block;
+      padding-bottom: 15px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 3px;
+      background-color: var(--primary);
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 40px;
+      margin-bottom: 40px;
+      transition: var(--transition);
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+    
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .assumptions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .assumption-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 25px;
+      padding: 15px;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+    
+    .assumption-item:hover {
+      background-color: rgba(0,0,0,0.02);
+      transform: translateX(5px);
+    }
+    
+    .assumption-icon {
+      background-color: var(--primary);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .assumption-content h4 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .assumption-content p {
+      color: var(--secondary);
+    }
+    
+    .cost-comparison {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+    }
+    
+    .cost-option {
+      flex: 1;
+      min-width: 300px;
+      transition: var(--transition);
+      transform: scale(1);
+    }
+    
+    .cost-option:hover {
+      transform: scale(1.03);
+    }
+    
+    .cost-option-header {
+      background-color: var(--primary);
+      color: white;
+      padding: 20px;
+      border-radius: 12px 12px 0 0;
+      text-align: center;
+    }
+    
+    .cost-option-header h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .cost-option:nth-child(2) .cost-option-header {
+      background-color: var(--secondary);
+    }
+    
+    .cost-option-body {
+      background-color: white;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+    
+    .cost-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .cost-item:last-child {
+      border-bottom: none;
+    }
+    
+    .cost-total {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 2px solid var(--border);
+      font-weight: bold;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .benefits-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+      box-shadow: var(--shadow);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .benefits-table th, .benefits-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .benefits-table th {
+      background-color: var(--primary);
+      color: white;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .benefits-table tr {
+      transition: var(--transition);
+    }
+    
+    .benefits-table tr:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+    
+    .benefits-table tr:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.01);
+    }
+    
+    .benefits-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .factors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 40px;
+    }
+    
+    .factor-card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid rgba(0,0,0,0.03);
+      height: 100%;
+    }
+    
+    .factor-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .factor-card-header {
+      padding: 20px;
+      color: white;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    
+    .factor-card-header h3 {
+      font-size: 1.4rem;
+      margin: 0;
+    }
+    
+    .buy-factor .factor-card-header {
+      background-color: var(--primary);
+    }
+    
+    .build-factor .factor-card-header {
+      background-color: var(--secondary);
+    }
+    
+    .factor-card-body {
+      padding: 30px;
+      background-color: white;
+    }
+    
+    .factor-item {
+      margin-bottom: 15px;
+    }
+    
+    .factor-item h4 {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .factor-item h4 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+    
+    .build-factor .factor-item h4 i {
+      color: var(--secondary);
+    }
+    
+    .calculator-section {
+      background-color: #f9f9f9;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .calculator-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 10% 20%, rgba(0,0,0,0.02) 0%, transparent 80%);
+      z-index: 0;
+    }
+    
+    .calculator-card {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .calculator-table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: var(--shadow);
+      border-radius: 12px;
+      overflow: hidden;
+      background: white;
+    }
+    
+    .calculator-table th, .calculator-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .calculator-table th {
+      background-color: var(--primary);
+      color: white;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .calculator-table tr {
+      transition: var(--transition);
+    }
+    
+    .calculator-table tr:hover {
+      background-color: rgba(0,0,0,0.01);
+    }
+    
+    .calculator-table input[type="number"] {
+      width: 70px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    
+    .calculator-table input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+    }
+    
+    .calculator-result {
+      margin-top: 40px;
+      padding: 25px;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.3rem;
+      display: none;
+      box-shadow: var(--shadow);
+      transform: translateY(0);
+      transition: var(--transition);
+    }
+    
+    .calculator-result.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+      transition: var(--transition);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255,255,255,0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+    
+    .btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+    
+    .btn:active::after {
+      animation: ripple 1s ease-out;
+    }
+    
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
+    }
+    
+    .btn-block {
+      display: block;
+      width: 100%;
+      margin-top: 30px;
+    }
+    
+    .conclusion-section {
+      background-color: var(--primary);
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .conclusion-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      z-index: 0;
+    }
+    
+    .conclusion-card {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .conclusion-points {
+      text-align: left;
+      margin-top: 30px;
+    }
+    
+    .conclusion-point {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+    
+    .conclusion-point:hover {
+      background-color: rgba(255,255,255,0.1);
+      transform: translateX(5px);
+    }
+    
+    .conclusion-point i {
+      margin-right: 15px;
+      margin-top: 3px;
+      font-size: 1.2rem;
+    }
+    
+    footer {
+      background-color: var(--primary);
+      color: white;
+      padding: 40px 0;
+      text-align: center;
+      position: relative;
+    }
+    
+    footer::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background: var(--primary);
+      clip-path: polygon(0 100%, 100% 100%, 100% 0);
+    }
+    
+    .footer-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .footer-content p {
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+    
+    .footer-content a {
+      color: white;
+      text-decoration: underline;
+      transition: var(--transition);
+    }
+    
+    .footer-content a:hover {
+      opacity: 0.8;
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        padding: 40px 0 60px;
+      }
+      
+      header h1 {
+        font-size: 2rem;
+      }
+      
+      .section-title h2 {
+        font-size: 1.6rem;
+      }
+      
+      .cost-option {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>CRM Build vs Buy Decision Guide</h1>
+      <p>A comprehensive analysis to help you make the right choice for your business</p>
+    </div>
+  </header>
+  
+  <section id="assumptions">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Key Assumptions</h2>
+      </div>
+      <div class="card fade-in">
+        <div class="assumptions-grid">
+          <div class="assumption-item">
+            <div class="assumption-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="assumption-content">
+              <h4>Team Size</h4>
+              <p>25 users</p>
+            </div>
+          </div>
+          <div class="assumption-item">
+            <div class="assumption-icon">
+              <i class="fas fa-building"></i>
+            </div>
+            <div class="assumption-content">
+              <h4>Business Type</h4>
+              <p>Mid-size B2B company</p>
+            </div>
+          </div>
+          <div class="assumption-item">
+            <div class="assumption-icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="assumption-content">
+              <h4>Developer Rate</h4>
+              <p>$70/hour</p>
+            </div>
+          </div>
+          <div class="assumption-item">
+            <div class="assumption-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="assumption-content">
+              <h4>Build Timeline</h4>
+              <p>4 months</p>
+            </div>
+          </div>
+          <div class="assumption-item">
+            <div class="assumption-icon">
+              <i class="fas fa-tools"></i>
+            </div>
+            <div class="assumption-content">
+              <h4>Maintenance</h4>
+              <p>15 hours/month</p>
+            </div>
+          </div>
+          <div class="assumption-item">
+            <div class="assumption-icon">
+              <i class="fas fa-cloud"></i>
+            </div>
+            <div class="assumption-content">
+              <h4>Salesforce License</h4>
+              <p>$150/user/month</p>
+            </div>
+          </div>
+          <div class="assumption-item">
+            <div class="assumption-icon">
+              <i class="fas fa-code"></i>
+            </div>
+            <div class="assumption-content">
+              <h4>Vibe-like Tools</h4>
+              <p>$25/user/month</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section id="cost-comparison">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Cost Comparison (Year 1)</h2>
+      </div>
+      <div class="cost-comparison fade-in">
+        <div class="cost-option">
+          <div class="cost-option-header">
+            <h3>Option A: Buy Salesforce</h3>
+          </div>
+          <div class="cost-option-body">
+            <div class="cost-item">
+              <span>Licenses (25 users × $150 × 12 months)</span>
+              <span>$45,000</span>
+            </div>
+            <div class="cost-item">
+              <span>Onboarding/Implementation</span>
+              <span>$10,000</span>
+            </div>
+            <div class="cost-item">
+              <span>Customization (40 hrs)</span>
+              <span>$2,800</span>
+            </div>
+            <div class="cost-total">
+              <span>Total Year 1 Cost</span>
+              <span>$57,800</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cost-option">
+          <div class="cost-option-header">
+            <h3>Option B: Build with Vibe</h3>
+          </div>
+          <div class="cost-option-body">
+            <div class="cost-item">
+              <span>Dev Time (4 devs × 4 months × 160 hrs × $70)</span>
+              <span>$179,200</span>
+            </div>
+            <div class="cost-item">
+              <span>Tooling Licenses (25 users × $25 × 12 months)</span>
+              <span>$7,500</span>
+            </div>
+            <div class="cost-item">
+              <span>Monthly Maintenance (15 hrs × 12 × $70)</span>
+              <span>$12,600</span>
+            </div>
+            <div class="cost-total">
+              <span>Total Year 1 Cost</span>
+              <span>$199,300</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section id="benefits-comparison">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Benefits Comparison</h2>
+      </div>
+      <div class="card fade-in">
+        <table class="benefits-table">
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>Salesforce</th>
+              <th>Build In-House</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Time to Deploy</td>
+              <td>Weeks</td>
+              <td>~4–5 months</td>
+            </tr>
+            <tr>
+              <td>Reliability</td>
+              <td>Enterprise-grade</td>
+              <td>Depends on team skill</td>
+            </tr>
+            <tr>
+              <td>Customization</td>
+              <td>Moderate</td>
+              <td>Full control</td>
+            </tr>
+            <tr>
+              <td>Maintenance</td>
+              <td>Minimal</td>
+              <td>Ongoing burden</td>
+            </tr>
+            <tr>
+              <td>Integrations</td>
+              <td>Extensive, native</td>
+              <td>Needs manual build or APIs</td>
+            </tr>
+            <tr>
+              <td>Scalability</td>
+              <td>Easy</td>
+              <td>Requires planning</td>
+            </tr>
+            <tr>
+              <td>Support</td>
+              <td>Included</td>
+              <td>Internal only</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  
+  <section id="key-factors">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Key Decision Factors</h2>
+      </div>
+      <div class="factors-grid fade-in">
+        <div class="factor-card buy-factor">
+          <div class="factor-card-header">
+            <h3>Factors Favoring BUYING</h3>
+          </div>
+          <div class="factor-card-body">
+            <div class="factor-item">
+              <h4><i class="fas fa-clock"></i> Time-to-Market</h4>
+              <p>Salesforce can be configured and deployed in weeks. Crucial if you're under pressure to scale quickly.</p>
+            </div>
+            <div class="factor-item">
+              <h4><i class="fas fa-shield-alt"></i> Reliability and Security</h4>
+              <p>Battle-tested infrastructure, compliance (SOC 2, GDPR), and automatic updates.</p>
+            </div>
+            <div class="factor-item">
+              <h4><i class="fas fa-plug"></i> Integration Ecosystem</h4>
+              <p>Out-of-the-box connectors to tools like Slack, Gmail, Stripe, QuickBooks, etc.</p>
+            </div>
+            <div class="factor-item">
+              <h4><i class="fas fa-headset"></i> Support and SLA</h4>
+              <p>Access to support, documentation, and enterprise uptime guarantees.</p>
+            </div>
+            <div class="factor-item">
+              <h4><i class="fas fa-chart-line"></i> Cost Predictability</h4>
+              <p>Subscription model makes budgeting easy; fewer surprises than with custom dev.</p>
+            </div>
+            <div class="factor-item">
+              <h4><i class="fas fa-user-friends"></i> Non-technical teams</h4>
+              <p>Easier for sales/marketing/support to use without relying on engineers.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="factor-card build-factor">
+          <div class="factor-card-header">
+            <h3>Factors Favoring BUILDING</h3>
+          </div>
+          <div class="factor-card-body">
+            <div class="factor-item">
+              <h4><i class="fas fa-cogs"></i> Unique Business Logic</h4>
+              <p>If your workflows or sales process is very domain-specific, a custom build allows perfect fit.</p>
+            </div>
+            <div class="factor-item">
+              <h4><i class="fas fa-piggy-bank"></i> Long-term Cost Savings</h4>
+              <p>Over 3–5 years, avoiding per-user license fees can outweigh initial build costs.</p>
+            </div>
+            <div class="factor-item">
+              <h4><i class="fas fa-sliders-h"></i> Flexibility & Control</h4>
+              <p>Full control over UI/UX, data structure, and roadmap—no vendor lock-in.</p>
+            </div>
+            <div class="factor-item">
+              <h4><i class="fas fa-laptop-code"></i> Internal Dev Resources</h4>
+              <p>If you have a skilled internal team with bandwidth, you reduce marginal cost.</p>
+            </div>
+            <div class="factor-item">
+              <h4><i class="fas fa-network-wired"></i> Integration Control</h4>
+              <p>Custom APIs or niche integrations can be tailored more precisely.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section id="calculator" class="calculator-section">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Decision Matrix Calculator</h2>
+      </div>
+      <div class="card calculator-card fade-in">
+        <p>Rate each factor from 1 (strongly favors Buy) to 5 (strongly favors Build) based on how much it applies to your situation.</p>
+        
+        <table class="calculator-table" id="calculator-table">
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th>Weight</th>
+              <th>Your Score (1-5)</th>
+              <th>Weighted Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Urgency to Launch</td>
+              <td>5</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="5"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+            <tr>
+              <td>Internal Dev Bandwidth</td>
+              <td>4</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="4"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+            <tr>
+              <td>Custom Workflow Needs</td>
+              <td>4</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="4"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+            <tr>
+              <td>Security/Compliance Needs</td>
+              <td>3</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="3"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+            <tr>
+              <td>Integration with Other Tools</td>
+              <td>3</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="3"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+            <tr>
+              <td>Long-term User Growth</td>
+              <td>3</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="3"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+            <tr>
+              <td>Budget Flexibility (Year 1)</td>
+              <td>4</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="4"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+            <tr>
+              <td>Tech Team's Maintenance Capacity</td>
+              <td>3</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="3"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+            <tr>
+              <td>Ease of Use for Non-Tech Teams</td>
+              <td>4</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="4"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+            <tr>
+              <td>Risk Tolerance for Downtime</td>
+              <td>2</td>
+              <td><input type="number" min="1" max="5" class="score-input" data-weight="2"></td>
+              <td class="weighted-score">-</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <button class="btn btn-block" id="calculate-btn">Calculate Total Score</button>
+        
+        <div class="calculator-result" id="calculator-result">
+          <p>Your total score: <span id="total-score">0</span></p>
+          <p id="recommendation"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section id="conclusion" class="conclusion-section">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Conclusion</h2>
+      </div>
+      <div class="conclusion-card fade-in">
+        <p>Unless your CRM needs are extremely unique and justify a long-term investment with full internal control, buying Salesforce is far more cost-effective and faster in terms of ROI—especially in Year 1.</p>
+        
+        <div class="conclusion-points">
+          <p>Building internally becomes viable only if:</p>
+          <div class="conclusion-point">
+            <i class="fas fa-check-circle"></i>
+            <span>You already have idle developer capacity</span>
+          </div>
+          <div class="conclusion-point">
+            <i class="fas fa-check-circle"></i>
+            <span>You need deep customization not possible in Salesforce</span>
+          </div>
+          <div class="conclusion-point">
+            <i class="fas fa-check-circle"></i>
+            <span>You want to avoid per-user licensing in the long run (break-even in 3–4 years)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <p>This interactive guide helps you make an informed decision between building or buying a CRM solution for your business.</p>
+        <p>&copy; 2023 CRM Decision Guide. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Calculate weighted scores when input changes
+      const scoreInputs = document.querySelectorAll('.score-input');
+      scoreInputs.forEach(input => {
+        input.addEventListener('input', function() {
+          calculateWeightedScore(this);
+        });
+      });
+      
+      // Calculate button click handler
+      document.getElementById('calculate-btn').addEventListener('click', function() {
+        calculateTotal();
+      });
+      
+      // Initialize fade-in animations
+      initFadeInAnimations();
+    });
+    
+    // Fade-in animation for elements as they come into view
+    function initFadeInAnimations() {
+      const fadeElements = document.querySelectorAll('.fade-in');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+      
+      fadeElements.forEach(element => {
+        observer.observe(element);
+      });
+    }
+    
+    function calculateWeightedScore(input) {
+      const weight = parseInt(input.dataset.weight);
+      const score = parseInt(input.value) || 0;
+      const weightedScore = weight * score;
+      
+      // Update the weighted score cell
+      const scoreCell = input.parentElement.nextElementSibling;
+      scoreCell.textContent = weightedScore;
+      
+      // Highlight the cell with animation
+      scoreCell.style.backgroundColor = 'rgba(0,0,0,0.05)';
+      setTimeout(() => {
+        scoreCell.style.backgroundColor = 'transparent';
+      }, 300);
+    }
+    
+    function calculateTotal() {
+      let totalScore = 0;
+      let maxPossibleScore = 0;
+      
+      // Get all weighted scores
+      const scoreInputs = document.querySelectorAll('.score-input');
+      let allFilled = true;
+      
+      scoreInputs.forEach(input => {
+        const weight = parseInt(input.dataset.weight);
+        const score = parseInt(input.value) || 0;
+        
+        if (!input.value) {
+          allFilled = false;
+        }
+        
+        totalScore += weight * score;
+        maxPossibleScore += weight * 5; // 5 is max score
+      });
+      
+      // Calculate percentage (normalized score)
+      const percentage = Math.round((totalScore / maxPossibleScore) * 100);
+      
+      // Update result
+      document.getElementById('total-score').textContent = totalScore + ' (' + percentage + '%)';
+      
+      // Show recommendation based on percentage
+      const recommendation = document.getElementById('recommendation');
+      
+      if (percentage < 40) {
+        recommendation.textContent = 'Recommendation: BUY a CRM solution';
+      } else if (percentage > 60) {
+        recommendation.textContent = 'Recommendation: BUILD your custom CRM';
+      } else {
+        recommendation.textContent = 'Recommendation: HYBRID approach may be best - consider buying core CRM and building custom extensions';
+      }
+      
+      // Show result with animation
+      const resultDiv = document.getElementById('calculator-result');
+      resultDiv.style.display = 'block';
+      resultDiv.classList.add('show');
+      
+      // Scroll to result
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>
