@@ -18,6 +18,7 @@
       --border: #e0e0e0;
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       --transition: all 0.3s ease;
+      --modal-bg: rgba(0, 0, 0, 0.5);
     }
     
     /* Animation classes */
@@ -137,6 +138,63 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
     
+    .assumptions-grid-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .assumptions-grid-header h3 {
+      font-size: 1.4rem;
+      color: var(--primary);
+      margin: 0;
+    }
+    
+    .btn-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+    
+    .btn-circle:hover {
+      transform: scale(1.1);
+      background-color: var(--primary-dark);
+    }
+    
+    .btn-circle {
+      position: relative;
+    }
+    
+    .tooltip {
+      position: absolute;
+      background-color: var(--dark);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      bottom: -35px;
+      right: 0;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+    
+    .btn-circle:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+    
     .assumptions-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -150,6 +208,38 @@
       padding: 15px;
       border-radius: 8px;
       transition: var(--transition);
+    }
+    
+    .assumption-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .assumption-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .impact-indicator {
+      color: var(--success);
+      font-size: 0.9rem;
+      cursor: help;
+    }
+    
+    .delete-assumption-btn {
+      background: none;
+      border: none;
+      color: var(--secondary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 2px 5px;
+      transition: var(--transition);
+    }
+    
+    .delete-assumption-btn:hover {
+      color: var(--danger);
     }
     
     .assumption-item:hover {
@@ -173,7 +263,6 @@
     
     .assumption-content h4 {
       font-size: 1.2rem;
-      margin-bottom: 8px;
       font-weight: 600;
     }
     
@@ -197,6 +286,16 @@
     
     .cost-option:hover {
       transform: scale(1.03);
+    }
+    
+    .cost-option.highlight {
+      animation: highlight-pulse 1s ease;
+    }
+    
+    @keyframes highlight-pulse {
+      0% { box-shadow: var(--shadow); }
+      50% { box-shadow: 0 0 20px rgba(0,0,0,0.2); background-color: rgba(0,0,0,0.02); }
+      100% { box-shadow: var(--shadow); }
     }
     
     .cost-option-header {
@@ -455,19 +554,6 @@
       overflow: hidden;
     }
     
-    .btn::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 5px;
-      height: 5px;
-      background: rgba(255,255,255,0.5);
-      opacity: 0;
-      border-radius: 100%;
-      transform: scale(1, 1) translate(-50%);
-      transform-origin: 50% 50%;
-    }
     
     .btn:hover {
       background-color: var(--primary-dark);
@@ -475,20 +561,13 @@
       box-shadow: 0 6px 15px rgba(0,0,0,0.15);
     }
     
-    .btn:active::after {
-      animation: ripple 1s ease-out;
+    
+    .btn-active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background-color: var(--primary-dark);
     }
     
-    @keyframes ripple {
-      0% {
-        transform: scale(0, 0);
-        opacity: 0.5;
-      }
-      100% {
-        transform: scale(20, 20);
-        opacity: 0;
-      }
-    }
     
     .btn-block {
       display: block;
@@ -592,6 +671,219 @@
       opacity: 0.8;
     }
     
+    /* Slider styles */
+    .select-container {
+      margin-top: 10px;
+      position: relative;
+      width: 100%;
+    }
+
+    .dropdown {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background-color: white;
+      font-size: 1rem;
+      color: var(--dark);
+      appearance: none;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .dropdown:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+    }
+
+    .dropdown:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+    }
+
+    .select-container::after {
+      content: '\f078';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--secondary);
+    }
+
+    .slider-container {
+      margin-top: 10px;
+      width: 100%;
+    }
+    
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 5px;
+      background: #e0e0e0;
+      outline: none;
+      transition: var(--transition);
+    }
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      border: none;
+    }
+    
+    .slider:hover::-webkit-slider-thumb {
+      transform: scale(1.2);
+    }
+    
+    .slider:hover::-moz-range-thumb {
+      transform: scale(1.2);
+    }
+    
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 0.8rem;
+      color: var(--secondary);
+    }
+    
+    .update-button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--modal-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal {
+      background-color: var(--light);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      width: 90%;
+      max-width: 500px;
+      padding: 30px;
+      transform: translateY(-20px);
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .modal-header h3 {
+      font-size: 1.4rem;
+      color: var(--primary);
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .modal-close:hover {
+      color: var(--danger);
+      transform: scale(1.1);
+    }
+    
+    .modal-body {
+      margin-bottom: 25px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #444444;
+    }
+    
     @media (max-width: 768px) {
       header {
         padding: 40px 0 60px;
@@ -608,6 +900,89 @@
       .cost-option {
         min-width: 100%;
       }
+      
+      .assumption-item {
+        flex-direction: column;
+        padding: 20px 15px;
+      }
+      
+      .assumption-icon {
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+      
+      .assumption-content {
+        width: 100%;
+      }
+      
+      .assumptions-grid-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+      
+      .btn-circle {
+        align-self: center;
+      }
+      
+      .select-container {
+      margin-top: 10px;
+      position: relative;
+      width: 100%;
+    }
+
+    .dropdown {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background-color: white;
+      font-size: 1rem;
+      color: var(--dark);
+      appearance: none;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .dropdown:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+    }
+
+    .dropdown:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+    }
+
+    .select-container::after {
+      content: '\f078';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--secondary);
+    }
+
+    .slider-container {
+        margin-top: 15px;
+        width: 100%;
+      }
+      
+      .slider-labels {
+        font-size: 0.7rem;
+      }
+      
+      .assumptions-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .update-button-container {
+        margin-top: 30px;
+      }
     }
   </style>
 </head>
@@ -623,70 +998,148 @@
     <div class="container">
       <div class="section-title fade-in">
         <h2>Key Assumptions</h2>
+        <p>Adjust the sliders below to see how different assumptions affect costs</p>
       </div>
       <div class="card fade-in">
+        <div class="assumptions-grid-header">
+          <h3>Current Assumptions</h3>
+          <button id="add-assumption-btn" class="btn-circle" title="Add New Assumption">
+            <i class="fas fa-plus"></i>
+            <span class="tooltip">Add Custom Assumption</span>
+          </button>
+        </div>
         <div class="assumptions-grid">
-          <div class="assumption-item">
+          <div class="assumption-item fade-in active">
             <div class="assumption-icon">
               <i class="fas fa-users"></i>
             </div>
             <div class="assumption-content">
-              <h4>Team Size</h4>
-              <p>25 users</p>
+              <div class="assumption-header">
+                <h4>Team Size</h4>
+              
+              </div>
+              <p><span id="team-size-value">25</span> users</p>
+              <div class="slider-container">
+                <input type="range" min="5" max="100" value="25" class="slider" id="team-size-slider">
+                <div class="slider-labels">
+                  <span>5</span>
+                  <span>100</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="assumption-item">
+          <div class="assumption-item fade-in active">
             <div class="assumption-icon">
               <i class="fas fa-building"></i>
             </div>
             <div class="assumption-content">
-              <h4>Business Type</h4>
-              <p>Mid-size B2B company</p>
+              <div class="assumption-header">
+                <h4>Business Type</h4>
+                
+              </div>
+              <div class="select-container">
+                <select id="business-type-dropdown" class="dropdown">
+                <option value="mid-size-b2b">Mid-size B2B company</option>
+                <option value="small-b2b">Small B2B company</option>
+                <option value="large-b2b">Large B2B company</option>
+                <option value="b2c">B2C company</option>
+              </select>
+              </div>
             </div>
           </div>
-          <div class="assumption-item">
+          <div class="assumption-item fade-in active">
             <div class="assumption-icon">
               <i class="fas fa-dollar-sign"></i>
             </div>
             <div class="assumption-content">
-              <h4>Developer Rate</h4>
-              <p>$70/hour</p>
+              <div class="assumption-header">
+                <h4>Developer Rate</h4>
+             
+              </div>
+              <p>$<span id="dev-rate-value">70</span>/hour</p>
+              <div class="slider-container">
+                <input type="range" min="40" max="150" value="70" class="slider" id="dev-rate-slider">
+                <div class="slider-labels">
+                  <span>$40</span>
+                  <span>$150</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="assumption-item">
+          <div class="assumption-item fade-in active">
             <div class="assumption-icon">
               <i class="fas fa-calendar-alt"></i>
             </div>
             <div class="assumption-content">
-              <h4>Build Timeline</h4>
-              <p>4 months</p>
+              <div class="assumption-header">
+                <h4>Build Timeline</h4>
+             
+              </div>
+              <p><span id="build-time-value">4</span> months</p>
+              <div class="slider-container">
+                <input type="range" min="2" max="12" value="4" class="slider" id="build-time-slider">
+                <div class="slider-labels">
+                  <span>2</span>
+                  <span>12</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="assumption-item">
+          <div class="assumption-item fade-in active">
             <div class="assumption-icon">
               <i class="fas fa-tools"></i>
             </div>
             <div class="assumption-content">
-              <h4>Maintenance</h4>
-              <p>15 hours/month</p>
+              <div class="assumption-header">
+                <h4>Maintenance</h4>
+              
+              </div>
+              <p><span id="maintenance-value">15</span> hours/month</p>
+              <div class="slider-container">
+                <input type="range" min="5" max="40" value="15" class="slider" id="maintenance-slider">
+                <div class="slider-labels">
+                  <span>5</span>
+                  <span>40</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="assumption-item">
+          <div class="assumption-item fade-in active">
             <div class="assumption-icon">
               <i class="fas fa-cloud"></i>
             </div>
             <div class="assumption-content">
-              <h4>Salesforce License</h4>
-              <p>$150/user/month</p>
+              <div class="assumption-header">
+                <h4>Salesforce License</h4>
+              
+              </div>
+              <p>$<span id="sf-license-value">150</span>/user/month</p>
+              <div class="slider-container">
+                <input type="range" min="75" max="300" value="150" class="slider" id="sf-license-slider">
+                <div class="slider-labels">
+                  <span>$75</span>
+                  <span>$300</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="assumption-item">
+          <div class="assumption-item fade-in active">
             <div class="assumption-icon">
               <i class="fas fa-code"></i>
             </div>
             <div class="assumption-content">
-              <h4>Vibe-like Tools</h4>
-              <p>$25/user/month</p>
+              <div class="assumption-header">
+                <h4>Vibe-like Tools</h4>
+             
+              </div>
+              <p>$<span id="vibe-license-value">25</span>/user/month</p>
+              <div class="slider-container">
+                <input type="range" min="10" max="50" value="25" class="slider" id="vibe-license-slider">
+                <div class="slider-labels">
+                  <span>$10</span>
+                  <span>$50</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -806,7 +1259,7 @@
       </div>
     </div>
   </section>
-  
+  <!--Key Decision Factors Sections-->
   <section id="key-factors">
     <div class="container">
       <div class="section-title fade-in">
@@ -1103,6 +1556,452 @@
       // Scroll to result
       resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+  </script>
+  <script>
+    // Initialize variables with default values
+    let teamSize = 25;
+    let devRate = 70;
+    let buildTime = 4;
+    let maintenance = 15;
+    let sfLicense = 150;
+    let vibeLicense = 25;
+    
+    // Store custom assumptions
+    let customAssumptions = [];
+    
+    // DOM elements
+    const teamSizeSlider = document.getElementById('team-size-slider');
+    const teamSizeValue = document.getElementById('team-size-value');
+    const devRateSlider = document.getElementById('dev-rate-slider');
+    const devRateValue = document.getElementById('dev-rate-value');
+    const buildTimeSlider = document.getElementById('build-time-slider');
+    const buildTimeValue = document.getElementById('build-time-value');
+    const maintenanceSlider = document.getElementById('maintenance-slider');
+    const maintenanceValue = document.getElementById('maintenance-value');
+    const sfLicenseSlider = document.getElementById('sf-license-slider');
+    const sfLicenseValue = document.getElementById('sf-license-value');
+    const vibeLicenseSlider = document.getElementById('vibe-license-slider');
+    const vibeLicenseValue = document.getElementById('vibe-license-value');
+    const updateButton = document.getElementById('update-costs-btn');
+    
+    // Function to update all cost calculations
+    function updateCostCalculations() {
+      // Calculate Salesforce costs
+      const sfLicenseCost = teamSize * sfLicense * 12;
+      const onboardingCost = 10000;
+      const customizationCost = 40 * devRate;
+      let sfTotalCost = sfLicenseCost + onboardingCost + customizationCost;
+      
+      // Calculate Build costs
+      const devTimeCost = 4 * buildTime * 160 * devRate; // 4 devs, buildTime months, 160 hrs/month
+      const vibeLicenseCost = teamSize * vibeLicense * 12;
+      const maintenanceCost = maintenance * 12 * devRate;
+      let buildTotalCost = devTimeCost + vibeLicenseCost + maintenanceCost;
+      
+      // Apply impact from custom assumptions
+      customAssumptions.forEach(assumption => {
+        if (assumption.impact && assumption.impact.factor) {
+          const impactAmount = assumption.value * assumption.impact.factor;
+          
+          // Apply to Buy option (type 1 or 3)
+          if (assumption.impact.type === 1 || assumption.impact.type === 3) {
+            sfTotalCost = sfTotalCost * (1 + impactAmount);
+          }
+          
+          // Apply to Build option (type 2 or 3)
+          if (assumption.impact.type === 2 || assumption.impact.type === 3) {
+            buildTotalCost = buildTotalCost * (1 + impactAmount);
+          }
+        }
+      });
+      
+      // Round the totals
+      sfTotalCost = Math.round(sfTotalCost);
+      buildTotalCost = Math.round(buildTotalCost);
+      
+      // Update the DOM with new calculations
+      // Salesforce option
+      document.querySelector('.cost-option:nth-child(1) .cost-item:nth-child(1) span:last-child').textContent = '$' + sfLicenseCost.toLocaleString();
+      document.querySelector('.cost-option:nth-child(1) .cost-item:nth-child(3) span:last-child').textContent = '$' + customizationCost.toLocaleString();
+      document.querySelector('.cost-option:nth-child(1) .cost-total span:last-child').textContent = '$' + sfTotalCost.toLocaleString();
+      
+      // Build option
+      document.querySelector('.cost-option:nth-child(2) .cost-item:nth-child(1) span:last-child').textContent = '$' + devTimeCost.toLocaleString();
+      document.querySelector('.cost-option:nth-child(2) .cost-item:nth-child(2) span:last-child').textContent = '$' + vibeLicenseCost.toLocaleString();
+      document.querySelector('.cost-option:nth-child(2) .cost-item:nth-child(3) span:last-child').textContent = '$' + maintenanceCost.toLocaleString();
+      document.querySelector('.cost-option:nth-child(2) .cost-total span:last-child').textContent = '$' + buildTotalCost.toLocaleString();
+      
+      // Update text descriptions
+      document.querySelector('.cost-option:nth-child(1) .cost-item:nth-child(1) span:first-child').textContent = `Licenses (${teamSize} users × $${sfLicense} × 12 months)`;
+      document.querySelector('.cost-option:nth-child(1) .cost-item:nth-child(3) span:first-child').textContent = `Customization (40 hrs × $${devRate})`;
+      
+      document.querySelector('.cost-option:nth-child(2) .cost-item:nth-child(1) span:first-child').textContent = `Dev Time (4 devs × ${buildTime} months × 160 hrs × $${devRate})`;
+      document.querySelector('.cost-option:nth-child(2) .cost-item:nth-child(2) span:first-child').textContent = `Tooling Licenses (${teamSize} users × $${vibeLicense} × 12 months)`;
+      document.querySelector('.cost-option:nth-child(2) .cost-item:nth-child(3) span:first-child').textContent = `Monthly Maintenance (${maintenance} hrs × 12 × $${devRate})`;
+    }
+    
+    // Add event listeners to sliders with debounce for performance
+    let debounceTimer;
+    
+    function debounce(func, delay) {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(func, delay);
+    }
+    
+    // Function to create a new custom assumption
+    function addNewAssumption(formData) {
+      // Generate a unique ID for the new assumption
+      const id = 'custom-assumption-' + Date.now();
+      
+      // Create a new assumption object
+      const newAssumption = {
+        id: id,
+        name: formData.name || 'Custom Assumption',
+        value: formData.value || 50,
+        min: formData.min || 0,
+        max: formData.max || 100,
+        icon: formData.icon || 'fa-star',
+        unit: formData.unit || '',
+        impact: 0 // No impact on calculations by default
+      };
+      
+      // Set impact if selected
+      if (formData.impactEnabled) {
+        newAssumption.impact = {
+          type: parseInt(formData.impactType) || 3,
+          factor: parseFloat(formData.impactFactor) || 0.01
+        };
+      }
+      
+      // Add to our custom assumptions array
+      customAssumptions.push(newAssumption);
+      
+      // Create the HTML for the new assumption
+      const assumptionHTML = `
+        <div class="assumption-item" id="${id}-container">
+          <div class="assumption-icon">
+            <i class="fas ${newAssumption.icon}"></i>
+          </div>
+          <div class="assumption-content">
+            <div class="assumption-header">
+              <h4 contenteditable="true" class="assumption-name">${newAssumption.name}</h4>
+              <div class="assumption-controls">
+                ${newAssumption.impact ? `<span class="impact-indicator" title="This assumption impacts ${newAssumption.impact.type === 1 ? 'Buy option' : newAssumption.impact.type === 2 ? 'Build option' : 'Both options'} by ${newAssumption.impact.factor * 100}% per unit"><i class="fas fa-chart-line"></i></span>` : ''}
+                <button class="delete-assumption-btn" data-id="${id}">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <p><span id="${id}-value">${newAssumption.value}</span> ${newAssumption.unit}</p>
+            <div class="slider-container">
+              <input type="range" min="${newAssumption.min}" max="${newAssumption.max}" value="${newAssumption.value}" class="slider" id="${id}-slider">
+              <div class="slider-labels">
+                <span>${newAssumption.min}</span>
+                <span>${newAssumption.max}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Add the new assumption to the grid
+      document.querySelector('.assumptions-grid').insertAdjacentHTML('beforeend', assumptionHTML);
+      
+      // Add event listener to the new slider
+      const slider = document.getElementById(`${id}-slider`);
+      const valueDisplay = document.getElementById(`${id}-value`);
+      
+      slider.addEventListener('input', function() {
+        const value = parseInt(this.value);
+        valueDisplay.textContent = value;
+        
+        // Update the value in our custom assumptions array
+        const index = customAssumptions.findIndex(a => a.id === id);
+        if (index !== -1) {
+          customAssumptions[index].value = value;
+        }
+        
+        debounce(updateCostCalculations, 100);
+      });
+      
+      // Add event listener to the delete button
+      const deleteBtn = document.querySelector(`[data-id="${id}"]`);
+      deleteBtn.addEventListener('click', function() {
+        // Remove from DOM
+        const container = document.getElementById(`${id}-container`);
+        container.remove();
+        
+        // Remove from our custom assumptions array
+        const index = customAssumptions.findIndex(a => a.id === id);
+        if (index !== -1) {
+          customAssumptions.splice(index, 1);
+        }
+        
+        // Update calculations
+        updateCostCalculations();
+      });
+      
+      // Make the name editable
+      const nameElement = document.querySelector(`#${id}-container .assumption-name`);
+      nameElement.addEventListener('blur', function() {
+        const newName = this.textContent;
+        const index = customAssumptions.findIndex(a => a.id === id);
+        if (index !== -1) {
+          customAssumptions[index].name = newName;
+        }
+      });
+    }
+    
+    teamSizeSlider.addEventListener('input', function() {
+      teamSize = parseInt(this.value);
+      teamSizeValue.textContent = teamSize;
+      debounce(updateCostCalculations, 100);
+    });
+    
+    devRateSlider.addEventListener('input', function() {
+      devRate = parseInt(this.value);
+      devRateValue.textContent = devRate;
+      debounce(updateCostCalculations, 100);
+    });
+    
+    buildTimeSlider.addEventListener('input', function() {
+      buildTime = parseInt(this.value);
+      buildTimeValue.textContent = buildTime;
+      debounce(updateCostCalculations, 100);
+    });
+    
+    maintenanceSlider.addEventListener('input', function() {
+      maintenance = parseInt(this.value);
+      maintenanceValue.textContent = maintenance;
+      debounce(updateCostCalculations, 100);
+    });
+    
+    sfLicenseSlider.addEventListener('input', function() {
+      sfLicense = parseInt(this.value);
+      sfLicenseValue.textContent = sfLicense;
+      debounce(updateCostCalculations, 100);
+    });
+    
+    vibeLicenseSlider.addEventListener('input', function() {
+      vibeLicense = parseInt(this.value);
+      vibeLicenseValue.textContent = vibeLicense;
+      debounce(updateCostCalculations, 100);
+    });
+    
+    // Initial calculation
+    window.addEventListener('load', updateCostCalculations);
+    
+    // Update cost calculations and add visual effect when button is clicked
+    updateButton.addEventListener('click', function() {
+      // Update calculations
+      updateCostCalculations();
+      
+      // Add animation effect
+      const costOptions = document.querySelectorAll('.cost-option');
+      costOptions.forEach(option => {
+        option.classList.add('highlight');
+        setTimeout(() => {
+          option.classList.remove('highlight');
+        }, 1000);
+      });
+      
+      // Add button animation
+      this.classList.add('btn-active');
+      setTimeout(() => {
+        this.classList.remove('btn-active');
+      }, 300);
+      
+      // Scroll to cost comparison section
+      document.getElementById('cost-comparison').scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    // Animation for fade-in elements
+    document.addEventListener('DOMContentLoaded', function() {
+      const fadeElements = document.querySelectorAll('.fade-in');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      fadeElements.forEach(element => {
+        observer.observe(element);
+      });
+    });
+  </script>
+  <!-- Modal for adding new assumption -->
+  <div class="modal-overlay" id="add-assumption-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add New Assumption</h3>
+        <button class="modal-close" id="close-modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="assumption-form">
+          <div class="form-group">
+            <label for="assumption-name">Assumption Name</label>
+            <input type="text" id="assumption-name" class="form-control" placeholder="Custom Assumption" required>
+          </div>
+          <div class="form-group">
+            <label for="assumption-unit">Unit (e.g. %, $, hours)</label>
+            <input type="text" id="assumption-unit" class="form-control" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="assumption-min">Minimum Value</label>
+            <input type="number" id="assumption-min" class="form-control" value="0" required>
+          </div>
+          <div class="form-group">
+            <label for="assumption-max">Maximum Value</label>
+            <input type="number" id="assumption-max" class="form-control" value="100" required>
+          </div>
+          <div class="form-group">
+            <label for="assumption-value">Default Value</label>
+            <input type="number" id="assumption-value" class="form-control" value="50" required>
+          </div>
+          <div class="form-group">
+            <label for="assumption-icon">Icon</label>
+            <select class="form-control" id="assumption-icon">
+              <option value="fa-star">Star</option>
+              <option value="fa-users">Users</option>
+              <option value="fa-building">Building</option>
+              <option value="fa-dollar-sign">Dollar</option>
+              <option value="fa-percentage">Percentage</option>
+              <option value="fa-clock">Clock</option>
+              <option value="fa-cog">Gear</option>
+              <option value="fa-chart-line">Chart</option>
+              <option value="fa-user">User</option>
+              <option value="fa-tag">Tag</option>
+              <option value="fa-lightbulb">Lightbulb</option>
+              <option value="fa-code">Code</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="impact-enabled"> Impact cost calculations
+            </label>
+          </div>
+          <div id="impact-options" style="display: none;">
+            <div class="form-group">
+              <label for="impact-type">Impact Type</label>
+              <select id="impact-type" class="form-control">
+                <option value="1">Buy option</option>
+                <option value="2">Build option</option>
+                <option value="3" selected>Both options</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="impact-factor">Impact Factor (0.01 = 1% per unit)</label>
+              <input type="number" id="impact-factor" class="form-control" value="0.01" step="0.01">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-assumption">Cancel</button>
+        <button class="btn" id="save-assumption">Save Assumption</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Modal functionality
+    const addAssumptionBtn = document.getElementById('add-assumption-btn');
+    const modal = document.getElementById('add-assumption-modal');
+    const closeModalBtn = document.getElementById('close-assumption-modal');
+    const cancelBtn = document.getElementById('cancel-assumption');
+    const saveBtn = document.getElementById('save-assumption');
+    const assumptionsGrid = document.querySelector('.assumptions-grid');
+    const impactEnabledCheckbox = document.getElementById('impact-enabled');
+    const impactOptionsDiv = document.getElementById('impact-options');
+    
+    // Show/hide impact options based on checkbox
+    impactEnabledCheckbox.addEventListener('change', function() {
+      impactOptionsDiv.style.display = this.checked ? 'block' : 'none';
+    });
+    
+    // Open modal
+    addAssumptionBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+    });
+    
+    // Close modal functions
+    function closeModal() {
+      modal.classList.remove('active');
+      // Reset form
+      document.getElementById('assumption-form').reset();
+      impactOptionsDiv.style.display = 'none';
+    }
+    
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+    
+    // Save new assumption
+    saveBtn.addEventListener('click', () => {
+      const name = document.getElementById('assumption-name').value;
+      const unit = document.getElementById('assumption-unit').value;
+      const min = parseInt(document.getElementById('assumption-min').value);
+      const max = parseInt(document.getElementById('assumption-max').value);
+      const value = parseInt(document.getElementById('assumption-value').value);
+      const icon = document.getElementById('assumption-icon').value;
+      const impactEnabled = document.getElementById('impact-enabled').checked;
+      const impactType = document.getElementById('impact-type').value;
+      const impactFactor = document.getElementById('impact-factor').value;
+      
+      if (!name.trim() || isNaN(min) || isNaN(max) || isNaN(value)) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      if (value < min || value > max) {
+        alert('Default value must be between minimum and maximum values');
+        return;
+      }
+      
+      // Create form data object
+      const formData = {
+        name: name,
+        unit: unit,
+        min: min,
+        max: max,
+        value: value,
+        icon: icon,
+        impactEnabled: impactEnabled,
+        impactType: impactType,
+        impactFactor: impactFactor
+      };
+      
+      // Call the addNewAssumption function with the form data
+      addNewAssumption(formData);
+      
+      // Close modal
+      closeModal();
+    });
+    
+    // Add delete functionality to existing assumptions
+    document.querySelectorAll('.delete-assumption-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.closest('.assumption-item').remove();
+      });
+    });
+    
+    // Add event listener to the add assumption button
+    document.getElementById('add-assumption-btn').addEventListener('click', function() {
+      modal.classList.add('active');
+    });
+    
+    // Initialize variables and other functionality
   </script>
 </body>
 </html>
