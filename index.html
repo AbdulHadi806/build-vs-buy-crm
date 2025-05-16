@@ -1602,6 +1602,12 @@
     
     // Function to update all cost calculations
     function updateCostCalculations() {
+      // Reset the changed options tracking for this calculation cycle
+      changedOptions = {
+        optionA: false,
+        optionB: false
+      };
+      
       // Calculate Salesforce costs
       const sfLicenseCost = teamSize * sfLicense * 12;
       const onboardingCost = 10000;
@@ -1675,6 +1681,12 @@
       debounceTimer = setTimeout(func, delay);
     }
     
+    // Track which options have changed in the current update cycle
+    let changedOptions = {
+      optionA: false,
+      optionB: false
+    };
+    
     // Helper function to update value and highlight if changed
     function updateValueWithHighlight(selector, newValue, oldValue) {
       const element = document.querySelector(selector);
@@ -1683,6 +1695,13 @@
       // Only apply highlighting if this isn't the first calculation (oldValue > 0)
       // and the value has actually changed
       if (oldValue > 0 && newValue !== oldValue) {
+        // Track which option is changing
+        if (selector.includes('.cost-option:nth-child(1)')) {
+          changedOptions.optionA = true;
+        } else if (selector.includes('.cost-option:nth-child(2)')) {
+          changedOptions.optionB = true;
+        }
+        
         // First, remove the 'changed-value' class from all elements that might have it
         document.querySelectorAll('.changed-value').forEach(el => {
           el.classList.remove('changed-value');
@@ -1690,6 +1709,13 @@
         
         // Then add the class to highlight the new change
         element.classList.add('changed-value');
+        
+        // If both options have changed, highlight all changed values in both options
+        if (changedOptions.optionA && changedOptions.optionB) {
+          document.querySelectorAll('.cost-option:nth-child(1) .cost-total span:last-child, .cost-option:nth-child(2) .cost-total span:last-child').forEach(el => {
+            el.classList.add('changed-value');
+          });
+        }
         
         // The highlight will persist until another assumption changes
       }
