@@ -989,6 +989,100 @@
         margin-top: 30px;
       }
     }
+
+    /* Add these styles to your existing CSS */
+    .decision-meter-container {
+      margin: 40px auto;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .decision-meter {
+      height: 20px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #f59e0b);
+      width: 50%;
+      transition: width 0.3s ease;
+    }
+
+    .meter-threshold {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #333;
+    }
+
+    .meter-labels {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      color: var(--dark);
+    }
+
+    .decision-result {
+      text-align: center;
+      margin-top: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .decision-result h3 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .factor-slider {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      background: #e0e0e0;
+      border-radius: 3px;
+      outline: none;
+    }
+
+    .factor-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .factor-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .factor-slider:hover::-webkit-slider-thumb {
+      transform: scale(1.2);
+    }
+
+    .factor-slider:hover::-moz-range-thumb {
+      transform: scale(1.2);
+    }
+
+    .weighted-score {
+      font-weight: bold;
+      color: var(--primary);
+    }
   </style>
 </head>
 <body>
@@ -1269,66 +1363,78 @@
     <div class="container">
       <div class="section-title fade-in">
         <h2>Key Decision Factors</h2>
+        <p>Rate each factor from 1-10 to determine whether to build or buy</p>
       </div>
-      <div class="factors-grid fade-in">
-        <div class="factor-card buy-factor">
-          <div class="factor-card-header">
-            <h3>Factors Favoring BUYING</h3>
+      <div class="card fade-in">
+        <table class="benefits-table" id="decision-factors-table">
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th>Weight</th>
+              <th>Your Score (1-10)</th>
+              <th>Weighted Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Time-to-Market Urgency</td>
+              <td>5</td>
+              <td><input type="range" min="1" max="10" value="5" class="factor-slider" data-weight="5"></td>
+              <td class="weighted-score">25</td>
+            </tr>
+            <tr>
+              <td>Internal Development Resources</td>
+              <td>4</td>
+              <td><input type="range" min="1" max="10" value="5" class="factor-slider" data-weight="4"></td>
+              <td class="weighted-score">20</td>
+            </tr>
+            <tr>
+              <td>Customization Needs</td>
+              <td>4</td>
+              <td><input type="range" min="1" max="10" value="5" class="factor-slider" data-weight="4"></td>
+              <td class="weighted-score">20</td>
+            </tr>
+            <tr>
+              <td>Security & Compliance Requirements</td>
+              <td>3</td>
+              <td><input type="range" min="1" max="10" value="5" class="factor-slider" data-weight="3"></td>
+              <td class="weighted-score">15</td>
+            </tr>
+            <tr>
+              <td>Integration Requirements</td>
+              <td>3</td>
+              <td><input type="range" min="1" max="10" value="5" class="factor-slider" data-weight="3"></td>
+              <td class="weighted-score">15</td>
+            </tr>
+            <tr>
+              <td>Budget Flexibility</td>
+              <td>4</td>
+              <td><input type="range" min="1" max="10" value="5" class="factor-slider" data-weight="4"></td>
+              <td class="weighted-score">20</td>
+            </tr>
+            <tr>
+              <td>Long-term Maintenance Capacity</td>
+              <td>3</td>
+              <td><input type="range" min="1" max="10" value="5" class="factor-slider" data-weight="3"></td>
+              <td class="weighted-score">15</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="decision-meter-container">
+          <div class="decision-meter">
+            <div class="meter-fill"></div>
+            <div class="meter-threshold"></div>
           </div>
-          <div class="factor-card-body">
-            <div class="factor-item">
-              <h4><i class="fas fa-clock"></i> Time-to-Market</h4>
-              <p>Salesforce can be configured and deployed in weeks. Crucial if you're under pressure to scale quickly.</p>
-            </div>
-            <div class="factor-item">
-              <h4><i class="fas fa-shield-alt"></i> Reliability and Security</h4>
-              <p>Battle-tested infrastructure, compliance (SOC 2, GDPR), and automatic updates.</p>
-            </div>
-            <div class="factor-item">
-              <h4><i class="fas fa-plug"></i> Integration Ecosystem</h4>
-              <p>Out-of-the-box connectors to tools like Slack, Gmail, Stripe, QuickBooks, etc.</p>
-            </div>
-            <div class="factor-item">
-              <h4><i class="fas fa-headset"></i> Support and SLA</h4>
-              <p>Access to support, documentation, and enterprise uptime guarantees.</p>
-            </div>
-            <div class="factor-item">
-              <h4><i class="fas fa-chart-line"></i> Cost Predictability</h4>
-              <p>Subscription model makes budgeting easy; fewer surprises than with custom dev.</p>
-            </div>
-            <div class="factor-item">
-              <h4><i class="fas fa-user-friends"></i> Non-technical teams</h4>
-              <p>Easier for sales/marketing/support to use without relying on engineers.</p>
-            </div>
+          <div class="meter-labels">
+            <span>BUY</span>
+            <span>BUILD</span>
           </div>
         </div>
-        
-        <div class="factor-card build-factor">
-          <div class="factor-card-header">
-            <h3>Factors Favoring BUILDING</h3>
-          </div>
-          <div class="factor-card-body">
-            <div class="factor-item">
-              <h4><i class="fas fa-cogs"></i> Unique Business Logic</h4>
-              <p>If your workflows or sales process is very domain-specific, a custom build allows perfect fit.</p>
-            </div>
-            <div class="factor-item">
-              <h4><i class="fas fa-piggy-bank"></i> Long-term Cost Savings</h4>
-              <p>Over 3–5 years, avoiding per-user license fees can outweigh initial build costs.</p>
-            </div>
-            <div class="factor-item">
-              <h4><i class="fas fa-sliders-h"></i> Flexibility & Control</h4>
-              <p>Full control over UI/UX, data structure, and roadmap—no vendor lock-in.</p>
-            </div>
-            <div class="factor-item">
-              <h4><i class="fas fa-laptop-code"></i> Internal Dev Resources</h4>
-              <p>If you have a skilled internal team with bandwidth, you reduce marginal cost.</p>
-            </div>
-            <div class="factor-item">
-              <h4><i class="fas fa-network-wired"></i> Integration Control</h4>
-              <p>Custom APIs or niche integrations can be tailored more precisely.</p>
-            </div>
-          </div>
+
+        <div class="decision-result">
+          <h3>Decision: <span id="decision-text">Neutral</span></h3>
+          <p id="decision-explanation">Adjust the sliders above to see the recommendation change.</p>
         </div>
       </div>
     </div>
@@ -2085,6 +2191,152 @@
         });
       });
     }); // Closing the DOMContentLoaded event listener
+  </script>
+
+  <script>
+    // Add this to your existing JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+      const sliders = document.querySelectorAll('.factor-slider');
+      const meterFill = document.querySelector('.meter-fill');
+      const decisionText = document.getElementById('decision-text');
+      const decisionExplanation = document.getElementById('decision-explanation');
+
+      // Function to calculate weighted average
+      function calculateWeightedAverage() {
+        let totalWeightedScore = 0;
+        let totalWeight = 0;
+
+        sliders.forEach(slider => {
+          const weight = parseInt(slider.dataset.weight);
+          const score = parseInt(slider.value);
+          const weightedScore = weight * score;
+          
+          // Update the weighted score cell
+          const scoreCell = slider.closest('tr').querySelector('.weighted-score');
+          scoreCell.textContent = weightedScore;
+
+          totalWeightedScore += weightedScore;
+          totalWeight += weight;
+        });
+
+        return totalWeightedScore / totalWeight;
+      }
+
+      // Function to update the visual meter
+      function updateMeter(averageScore) {
+        const percentage = (averageScore / 10) * 100;
+        meterFill.style.width = `${percentage}%`;
+      }
+
+      // Function to get decision explanation
+      function getDecisionExplanation(averageScore) {
+        if (averageScore < 4) {
+          return 'Strong recommendation to BUY. Your factors indicate that a ready-made solution would be more cost-effective and faster to implement.';
+        } else if (averageScore < 5) {
+          return 'Recommendation to BUY. Your factors suggest that buying a CRM solution would be more beneficial, especially considering time-to-market and resource constraints.';
+        } else if (averageScore === 5) {
+          return 'Neutral recommendation. Your factors are balanced between buying and building. Consider a hybrid approach or evaluate additional factors.';
+        } else if (averageScore < 6) {
+          return 'Recommendation to BUILD. Your factors suggest that a custom solution might better meet your specific needs, though consider the initial investment required.';
+        } else {
+          return 'Strong recommendation to BUILD. Your factors strongly indicate that a custom solution would be more beneficial for your specific requirements and long-term goals.';
+        }
+      }
+
+      // Function to update decision text and styling
+      function updateDecisionText(averageScore) {
+        if (averageScore < 5) {
+          decisionText.textContent = 'BUY';
+          decisionText.style.color = '#10b981';
+        } else if (averageScore > 5) {
+          decisionText.textContent = 'BUILD';
+          decisionText.style.color = '#f59e0b';
+        } else {
+          decisionText.textContent = 'NEUTRAL';
+          decisionText.style.color = '#555555';
+        }
+      }
+
+      // Main function to update all elements
+      function updateDecision() {
+        const averageScore = calculateWeightedAverage();
+        updateMeter(averageScore);
+        updateDecisionText(averageScore);
+        decisionExplanation.textContent = getDecisionExplanation(averageScore);
+
+        // Add animation effect to the meter
+        meterFill.style.transition = 'width 0.3s ease';
+      }
+
+      // Add event listeners to all sliders with debounce
+      let debounceTimer;
+      sliders.forEach(slider => {
+        slider.addEventListener('input', function() {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(updateDecision, 50);
+        });
+      });
+
+      // Add hover effect to show current value
+      sliders.forEach(slider => {
+        slider.addEventListener('mousemove', function(e) {
+          const rect = this.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const percentage = x / rect.width;
+          const value = Math.round(percentage * (parseInt(this.max) - parseInt(this.min)) + parseInt(this.min));
+          
+          // Create or update tooltip
+          let tooltip = this.parentElement.querySelector('.slider-tooltip');
+          if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.className = 'slider-tooltip';
+            this.parentElement.style.position = 'relative';
+            this.parentElement.appendChild(tooltip);
+          }
+          
+          tooltip.textContent = value;
+          tooltip.style.left = `${x}px`;
+        });
+
+        slider.addEventListener('mouseleave', function() {
+          const tooltip = this.parentElement.querySelector('.slider-tooltip');
+          if (tooltip) {
+            tooltip.remove();
+          }
+        });
+      });
+
+      // Add styles for tooltip
+      const style = document.createElement('style');
+      style.textContent = `
+        .slider-tooltip {
+          position: absolute;
+          top: -25px;
+          transform: translateX(-50%);
+          background: var(--primary);
+          color: white;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 12px;
+          pointer-events: none;
+        }
+        
+        .slider-tooltip::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          border-top: 4px solid var(--primary);
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Initial calculation
+      updateDecision();
+    });
   </script>
 </body>
 </html>
