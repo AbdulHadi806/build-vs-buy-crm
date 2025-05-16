@@ -346,6 +346,11 @@
       justify-content: space-between;
     }
     
+    .changed-value {
+      color: var(--danger);
+      transition: color 0.5s ease;
+    }
+    
     .benefits-table {
       width: 100%;
       border-collapse: collapse;
@@ -1584,6 +1589,17 @@
     const vibeLicenseValue = document.getElementById('vibe-license-value');
     const updateButton = document.getElementById('update-costs-btn');
     
+    // Store previous values for comparison
+    let prevValues = {
+      sfLicenseCost: 0,
+      customizationCost: 0,
+      sfTotalCost: 0,
+      devTimeCost: 0,
+      vibeLicenseCost: 0,
+      maintenanceCost: 0,
+      buildTotalCost: 0
+    };
+    
     // Function to update all cost calculations
     function updateCostCalculations() {
       // Calculate Salesforce costs
@@ -1619,17 +1635,28 @@
       sfTotalCost = Math.round(sfTotalCost);
       buildTotalCost = Math.round(buildTotalCost);
       
-      // Update the DOM with new calculations
+      // Update the DOM with new calculations and highlight changes
       // Salesforce option
-      document.querySelector('.cost-option:nth-child(1) .cost-item:nth-child(1) span:last-child').textContent = '$' + sfLicenseCost.toLocaleString();
-      document.querySelector('.cost-option:nth-child(1) .cost-item:nth-child(3) span:last-child').textContent = '$' + customizationCost.toLocaleString();
-      document.querySelector('.cost-option:nth-child(1) .cost-total span:last-child').textContent = '$' + sfTotalCost.toLocaleString();
+      updateValueWithHighlight('.cost-option:nth-child(1) .cost-item:nth-child(1) span:last-child', sfLicenseCost, prevValues.sfLicenseCost);
+      updateValueWithHighlight('.cost-option:nth-child(1) .cost-item:nth-child(3) span:last-child', customizationCost, prevValues.customizationCost);
+      updateValueWithHighlight('.cost-option:nth-child(1) .cost-total span:last-child', sfTotalCost, prevValues.sfTotalCost);
       
       // Build option
-      document.querySelector('.cost-option:nth-child(2) .cost-item:nth-child(1) span:last-child').textContent = '$' + devTimeCost.toLocaleString();
-      document.querySelector('.cost-option:nth-child(2) .cost-item:nth-child(2) span:last-child').textContent = '$' + vibeLicenseCost.toLocaleString();
-      document.querySelector('.cost-option:nth-child(2) .cost-item:nth-child(3) span:last-child').textContent = '$' + maintenanceCost.toLocaleString();
-      document.querySelector('.cost-option:nth-child(2) .cost-total span:last-child').textContent = '$' + buildTotalCost.toLocaleString();
+      updateValueWithHighlight('.cost-option:nth-child(2) .cost-item:nth-child(1) span:last-child', devTimeCost, prevValues.devTimeCost);
+      updateValueWithHighlight('.cost-option:nth-child(2) .cost-item:nth-child(2) span:last-child', vibeLicenseCost, prevValues.vibeLicenseCost);
+      updateValueWithHighlight('.cost-option:nth-child(2) .cost-item:nth-child(3) span:last-child', maintenanceCost, prevValues.maintenanceCost);
+      updateValueWithHighlight('.cost-option:nth-child(2) .cost-total span:last-child', buildTotalCost, prevValues.buildTotalCost);
+      
+      // Store current values for next comparison
+      prevValues = {
+        sfLicenseCost,
+        customizationCost,
+        sfTotalCost,
+        devTimeCost,
+        vibeLicenseCost,
+        maintenanceCost,
+        buildTotalCost
+      };
       
       // Update text descriptions
       document.querySelector('.cost-option:nth-child(1) .cost-item:nth-child(1) span:first-child').textContent = `Licenses (${teamSize} users × $${sfLicense} × 12 months)`;
@@ -1646,6 +1673,26 @@
     function debounce(func, delay) {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(func, delay);
+    }
+    
+    // Helper function to update value and highlight if changed
+    function updateValueWithHighlight(selector, newValue, oldValue) {
+      const element = document.querySelector(selector);
+      element.textContent = '$' + newValue.toLocaleString();
+      
+      // Only apply highlighting if this isn't the first calculation (oldValue > 0)
+      // and the value has actually changed
+      if (oldValue > 0 && newValue !== oldValue) {
+        // First, remove the 'changed-value' class from all elements that might have it
+        document.querySelectorAll('.changed-value').forEach(el => {
+          el.classList.remove('changed-value');
+        });
+        
+        // Then add the class to highlight the new change
+        element.classList.add('changed-value');
+        
+        // The highlight will persist until another assumption changes
+      }
     }
     
     // Function to create a new custom assumption
