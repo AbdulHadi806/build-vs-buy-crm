@@ -1303,67 +1303,13 @@
     </div>
   </section>
   
-  <section id="benefits-comparison">
-    <div class="container">
-      <div class="section-title fade-in">
-        <h2>Benefits Comparison</h2>
-      </div>
-      <div class="card fade-in">
-        <table class="benefits-table">
-          <thead>
-            <tr>
-              <th>Aspect</th>
-              <th>Salesforce</th>
-              <th>Build In-House</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Time to Deploy</td>
-              <td>Weeks</td>
-              <td>~4–5 months</td>
-            </tr>
-            <tr>
-              <td>Reliability</td>
-              <td>Enterprise-grade</td>
-              <td>Depends on team skill</td>
-            </tr>
-            <tr>
-              <td>Customization</td>
-              <td>Moderate</td>
-              <td>Full control</td>
-            </tr>
-            <tr>
-              <td>Maintenance</td>
-              <td>Minimal</td>
-              <td>Ongoing burden</td>
-            </tr>
-            <tr>
-              <td>Integrations</td>
-              <td>Extensive, native</td>
-              <td>Needs manual build or APIs</td>
-            </tr>
-            <tr>
-              <td>Scalability</td>
-              <td>Easy</td>
-              <td>Requires planning</td>
-            </tr>
-            <tr>
-              <td>Support</td>
-              <td>Included</td>
-              <td>Internal only</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
+
   <!--Key Decision Factors Sections-->
   <section id="key-factors">
     <div class="container">
       <div class="section-title fade-in">
         <h2>Key Decision Factors</h2>
-        <p>Rate each factor from 1-10 to determine whether to build or buy</p>
+        <p>Rate each factor to determine whether to build or buy</p>
       </div>
       <div class="card fade-in">
         <table class="benefits-table" id="decision-factors-table">
@@ -1371,7 +1317,7 @@
             <tr>
               <th>Factor</th>
               <th>Weight</th>
-              <th>Your Score (1-10)</th>
+              <th>Your Score</th>
               <th>Weighted Score</th>
             </tr>
           </thead>
@@ -1436,6 +1382,62 @@
           <h3>Decision: <span id="decision-text">Neutral</span></h3>
           <p id="decision-explanation">Adjust the sliders above to see the recommendation change.</p>
         </div>
+      </div>
+    </div>
+  </section>
+  
+  <section id="benefits-comparison">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Benefits Comparison</h2>
+      </div>
+      <div class="card fade-in">
+        <table class="benefits-table">
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>Salesforce</th>
+              <th>Build In-House</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Time to Deploy</td>
+              <td>Weeks</td>
+              <td>~4–5 months</td>
+            </tr>
+            <tr>
+              <td>Reliability</td>
+              <td>Enterprise-grade</td>
+              <td>Depends on team skill</td>
+            </tr>
+            <tr>
+              <td>Customization</td>
+              <td>Moderate</td>
+              <td>Full control</td>
+            </tr>
+            <tr>
+              <td>Maintenance</td>
+              <td>Minimal</td>
+              <td>Ongoing burden</td>
+            </tr>
+            <tr>
+              <td>Integrations</td>
+              <td>Extensive, native</td>
+              <td>Needs manual build or APIs</td>
+            </tr>
+            <tr>
+              <td>Scalability</td>
+              <td>Easy</td>
+              <td>Requires planning</td>
+            </tr>
+            <tr>
+              <td>Support</td>
+              <td>Included</td>
+              <td>Internal only</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -2230,33 +2232,48 @@
 
       // Function to get decision explanation
       function getDecisionExplanation(averageScore) {
-        if (averageScore < 4) {
-          return 'Strong recommendation to BUY. Your factors indicate that a ready-made solution would be more cost-effective and faster to implement.';
+        if (averageScore < 3) {
+          return 'Very strong recommendation to BUY. Your factors overwhelmingly favor a ready-made solution, indicating significant advantages in terms of cost, implementation speed, and risk management.';
+        } else if (averageScore < 4) {
+          return 'Strong recommendation to BUY. Your factors indicate that a ready-made solution would be more cost-effective and faster to implement, with proven reliability.';
         } else if (averageScore < 5) {
-          return 'Recommendation to BUY. Your factors suggest that buying a CRM solution would be more beneficial, especially considering time-to-market and resource constraints.';
+          return 'Moderate recommendation to BUY. While a custom solution could work, your factors suggest that a pre-built CRM would better align with your current needs and resources.';
         } else if (averageScore === 5) {
-          return 'Neutral recommendation. Your factors are balanced between buying and building. Consider a hybrid approach or evaluate additional factors.';
+          return 'Neutral recommendation. Your factors are balanced between buying and building. Consider a hybrid approach or evaluate additional factors before making a final decision.';
         } else if (averageScore < 6) {
-          return 'Recommendation to BUILD. Your factors suggest that a custom solution might better meet your specific needs, though consider the initial investment required.';
+          return 'Moderate recommendation to BUILD. Your factors indicate that a custom solution could provide better long-term value, despite higher initial investment.';
+        } else if (averageScore < 7) {
+          return 'Strong recommendation to BUILD. Your factors strongly suggest that a custom solution would be more beneficial for your specific requirements and long-term goals.';
         } else {
-          return 'Strong recommendation to BUILD. Your factors strongly indicate that a custom solution would be more beneficial for your specific requirements and long-term goals.';
+          return 'Very strong recommendation to BUILD. Your factors overwhelmingly support building a custom solution, indicating unique requirements that would be best served by in-house development.';
         }
       }
 
       // Function to update decision text and styling
       function updateDecisionText(averageScore) {
-        if (averageScore < 5) {
+        if (averageScore < 3) {
+          decisionText.textContent = 'VERY STRONGLY BUY';
+          decisionText.style.color = '#059669';
+        } else if (averageScore < 4) {
+          decisionText.textContent = 'STRONGLY BUY';
+          decisionText.style.color = '#059669';
+        } else if (averageScore < 5) {
           decisionText.textContent = 'BUY';
           decisionText.style.color = '#10b981';
-        } else if (averageScore > 5) {
-          decisionText.textContent = 'BUILD';
-          decisionText.style.color = '#f59e0b';
-        } else {
+        } else if (averageScore === 5) {
           decisionText.textContent = 'NEUTRAL';
           decisionText.style.color = '#555555';
+        } else if (averageScore < 6) {
+          decisionText.textContent = 'BUILD';
+          decisionText.style.color = '#f59e0b';
+        } else if (averageScore < 7) {
+          decisionText.textContent = 'STRONGLY BUILD';
+          decisionText.style.color = '#d97706';
+        } else {
+          decisionText.textContent = 'VERY STRONGLY BUILD';
+          decisionText.style.color = '#d97706';
         }
       }
-
       // Main function to update all elements
       function updateDecision() {
         const averageScore = calculateWeightedAverage();
